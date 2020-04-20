@@ -25,4 +25,6 @@ HTML, CSS, JavaScript, React, FireBase
 
 ## 🚀 Preview
 
+![alt text](https://github.com/evibreukers/playList/edit/master/public/preview.png)
+
 ENJOY!
