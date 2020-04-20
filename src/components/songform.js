@@ -5,8 +5,8 @@ function songForm(props) {
     <div className="songForm">
       <input
         type="text"
-        name="title"
-        placeholder="title"
+        name="song"
+        placeholder="song"
         onChange={props.handleChange}
       ></input>
       <input
@@ -27,6 +27,7 @@ function songForm(props) {
         min="1"
         max="5"
         onChange={props.handleChange}
+        placeholder="rate"
       ></input>
       <button className="addSong-button" onClick={props.addSong}>
         add song

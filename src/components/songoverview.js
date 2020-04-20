@@ -2,33 +2,18 @@ import React from "react";
 import SongList from "./songlist";
 import SongForm from "./songform";
 import Filter from "./filter";
+import { getData, postData, deleteAll } from "../api-client";
 
 class SongOverview extends React.Component {
   constructor() {
     super();
     this.state = {
-      songs: [
-        {
-          id: "1",
-          song: "I love you",
-          artist: "Evi",
-          genre: "pop",
-          rating: "5",
-        },
-        {
-          id: "2",
-          song: "haha love you",
-          artist: "RAbel",
-          genre: "rock",
-          rating: "4",
-        },
-      ],
-      displaySongs: [],
+      songs: [],
       newSong: { song: "", artist: "", genre: "", rating: "" },
-      genres: ["show all", "pop", "rock"],
-      currentGenre: "show all",
+      genres: ["show all genres", "pop", "rock"],
+      currentGenre: "show all genres",
       currentRating: [],
-      sortBy: "song(a-z)",
+      sortBy: "song-up",
     };
   }
 
@@ -36,11 +21,22 @@ class SongOverview extends React.Component {
     const thisInput = event.target.name;
     const thisValue = event.target.value;
     const addSong = this.state.newSong;
-    addSong[thisInput] = thisValue;
+    addSong[thisInput] = thisValue.toLowerCase();
     this.setState({ newSong: addSong });
   };
 
   addSong = () => {
+    /* check for empty input */
+    const checkInput = Array.from(
+      document.querySelector(".songForm").querySelectorAll("input")
+    );
+    if (checkInput.filter((item) => item.value === "").length !== 0) {
+      return;
+    }
+
+    /* post song to database */
+    this.postSong();
+
     /* add id to newsong */
     const newId = this.state.songs.length + 1;
     this.setState((prevState) => {
@@ -51,7 +47,7 @@ class SongOverview extends React.Component {
     /* update genre */
     const genreList = this.state.genres;
     if (!genreList.find((item) => item === this.state.newSong.genre)) {
-      genreList.push(this.state.newSong.genre);
+      genreList.push(this.state.newSong.genre.toLowerCase());
     }
     this.setState({ genres: genreList });
 
@@ -90,30 +86,69 @@ class SongOverview extends React.Component {
     this.setState({ sortBy: event.target.value });
   };
 
-  clearSongs = () => {
-    this.setState({ songs: [] });
+  clearSongs = async () => {
+    try {
+      await deleteAll();
+      this.setState({
+        songs: [
+          {
+            id: "1",
+            song: "come online",
+            artist: "kid francescoli",
+            genre: "pop",
+            rating: "5",
+          },
+        ],
+      });
+      await this.loadList();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  loadList = async () => {
+    try {
+      let taskArray = await getData();
+
+      /* update genre list */
+      const updateGenres = this.state.genres;
+      taskArray.forEach((item) => {
+        if (!updateGenres.includes(item.genre)) {
+          updateGenres.push(item.genre);
+        }
+      });
+
+      this.setState({ songs: taskArray, genres: updateGenres });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  postSong = async () => {
+    const postSong = this.state.newSong;
+    try {
+      await postData(postSong);
+      await this.loadList();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  componentDidMount() {
+    this.loadList();
+  }
 
   render() {
     return (
-      <div>
-        {console.log(this.state.songs)}
-        {console.log(this.state.newSong)}
+      <div className="songOverview">
         <SongForm addSong={this.addSong} handleChange={this.handleChange} />
+        <h1>I AM YOUR PLAYLIST</h1>
         <Filter
           genres={this.state.genres}
           filterGenre={this.filterGenre}
           filterRating={this.filterRating}
           changeSort={this.changeSort}
         />
-        <table className="songTable">
-          <tr className="song-header">
-            <th className="song-row__item">Song</th>
-            <th className="song-row__item">Artist</th>
-            <th className="song-row__item">Genre</th>
-            <th className="song-row__item">Rating</th>
-          </tr>
-        </table>
         <SongList
           songs={this.state.songs}
           currentGenre={this.state.currentGenre}
@@ -121,7 +156,7 @@ class SongOverview extends React.Component {
           sortBy={this.state.sortBy}
         />
         <button className="clearSongs-button" onClick={this.clearSongs}>
-          CLEAR SONG LIST
+          clear all songs
         </button>
       </div>
     );
