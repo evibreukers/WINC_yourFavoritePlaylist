@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+.songTable {
+  width: 100%;
+}
+
+.songForm {
+  display: flex;
+  justify-content: center;
+}
+
+.songForm input {
+  padding: 10px;
+  font-size: 2rem;
+}
