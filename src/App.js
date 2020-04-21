@@ -1,5 +1,5 @@
 import React from "react";
-import SongOverview from "./components/songoverview";
+import SongOverview from "../src/songoverview";
 import "../src/assets/style.css";
 
 function App() {

@@ -1,38 +1,42 @@
 import React from "react";
 
-function songForm(props) {
+function songForm({ addSong, songs }) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const inputValue = event.target;
+    addSong(inputValue);
+  };
+
   return (
-    <div className="songForm">
+    <form className="songForm" onSubmit={handleSubmit}>
       <input
         type="text"
         name="song"
         placeholder="song"
-        onChange={props.handleChange}
+        value={songs.song}
       ></input>
       <input
         type="text"
         name="artist"
         placeholder="artist"
-        onChange={props.handleChange}
+        value={songs.artist}
       ></input>
       <input
         type="text"
         name="genre"
         placeholder="genre"
-        onChange={props.handleChange}
+        value={songs.genre}
       ></input>
       <input
         type="number"
         name="rating"
         min="1"
         max="5"
-        onChange={props.handleChange}
         placeholder="rate"
+        value={songs.rating}
       ></input>
-      <button className="addSong-button" onClick={props.addSong}>
-        add song
-      </button>
-    </div>
+      <button className="addSong-button">add song</button>
+    </form>
   );
 }
 
