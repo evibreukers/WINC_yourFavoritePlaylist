@@ -25,6 +25,9 @@ HTML, CSS, JavaScript, React, FireBase
 
 ## 🚀 Preview
 
+Take a look: 
+https://your-favorite-playlist.netlify.app
+
 ![alt text](/public/preview.png)
 
 ENJOY!
