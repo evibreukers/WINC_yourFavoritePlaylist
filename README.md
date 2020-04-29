@@ -2,8 +2,6 @@
 
 Winc Academy's 5th project of the Front-end Development traineeship.
 
-## 💬 Files
-
 ## 💬 Project Goal
 
 Building a Single Page Application (SPA) in which you can save and rate all your favorite songs.
